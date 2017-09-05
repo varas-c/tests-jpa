@@ -1,0 +1,5 @@
+Delete from testing.Cuenta;
+Delete from testing.Empresa;
+
+ALTER TABLE testing.Cuenta AUTO_INCREMENT = 1;
+ALTER TABLE testing.Empresa AUTO_INCREMENT = 1;
