@@ -8,10 +8,17 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
+@NamedQueries(value = 
+{
+	@NamedQuery(name="Empresa.findByName", query="SELECT e FROM Empresa e WHERE e.nombre = :nombre")
+})
+
 public class Empresa {
 	
 
@@ -33,7 +40,8 @@ public class Empresa {
 
 	@OneToMany(
 	        mappedBy = "empresa", 
-	        cascade = CascadeType.ALL
+	        cascade = CascadeType.ALL,
+	        orphanRemoval=true
 	)
 	public List<Cuenta> getCuentas() {
 		return cuentas;

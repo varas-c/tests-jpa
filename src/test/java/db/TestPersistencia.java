@@ -2,8 +2,11 @@ package db;
 
 import static org.junit.Assert.*;
 
+import java.util.stream.Collector;
+
 import javax.persistence.EntityManager;
 
+import org.hibernate.Criteria;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -26,7 +29,7 @@ public class TestPersistencia {
 	}
 	
 	
-	@Test
+	//@Test
 	public void insertarUnaEmpresaConTresCuentas() {
 		Empresa empresa = this.crearEmpresaConTresCuentas();
 		
@@ -41,7 +44,7 @@ public class TestPersistencia {
 		return (Empresa) manager.find(Empresa.class, id);
 	}
 	
-	@Test
+	//@Test
 	public void buscarCuentaEnDb() {
 		Empresa otraEmpresa = this.buscarEmpresaId(1L);
 		assertEquals(otraEmpresa.getCuentas().size(), 3);
@@ -50,7 +53,7 @@ public class TestPersistencia {
 		assertEquals(otraEmpresa.getCuentas().get(2).getNombre(), "Ebitda");
 	}
 	
-	@Test
+	//@Test
 	public void borrarUnaCuentaYAhoraTiene2() {
 		Empresa empresa = this.buscarEmpresaId(1L);
 		assertEquals(empresa.getCuentas().size(),3);
@@ -64,7 +67,13 @@ public class TestPersistencia {
 		assertEquals(empresa.getCuentas().size(),2);
 	}
 	
-	@Test
+	//@Test
+	public void prueba() {
+		Empresa empresa = this.buscarEmpresaId(1L);
+		assertEquals(empresa.getCuentas().size(),2);
+	}
+	
+	//@Test
 	public void agregarCuentasYAhoraTiene5() {
 		Empresa empresa = this.buscarEmpresaId(1L);
 		
@@ -80,9 +89,81 @@ public class TestPersistencia {
 		
 		empresa = this.buscarEmpresaId(1L);
 		assertEquals(empresa.getCuentas().size(),5);
+	}
+	
+	//@Test 
+	public void verificoQueTenga5() {
+		Empresa empresa = this.buscarEmpresaId(1L);
+		assertEquals(empresa.getCuentas().size(),5);
+	}
+	
+	//@Test
+	public void modificoCuentaEbitda() {
+		Empresa empresa = this.buscarEmpresaId(1L);
+		empresa.getCuentas().get(2).setNombre("Hackeada");
+		
+		manager.getTransaction().begin();
+		manager.persist(empresa);
+		manager.getTransaction().commit();
+	}
+	
+	//@Test
+	public void verificoQueTengaCuentaHackeada() {
+		Empresa empresa = this.buscarEmpresaId(1L);
+		assertEquals(empresa.getCuentas().get(2).getNombre(), "Hackeada");
+	}
+	
+	//@Test
+	public void creamosUnaNuevaEmpresa() {
+		Empresa empresa = new Empresa("Una nueva empresa");
+		empresa.addCuenta(new Cuenta("1","1","1",empresa));
+		
+		manager.getTransaction().begin();
+		manager.persist(empresa);
+		manager.getTransaction().commit();
+	}
+	
+	public Empresa buscarPorNombre(String nombre) {
+		return (Empresa) manager.createNamedQuery("Empresa.findByName").setParameter("nombre", nombre).getSingleResult();
 		
 	}
 	
+	//@Test
+	public void buscamosEmpresaNuevaPorNombre() {
+		Empresa empresa = null;
+		empresa = this.buscarPorNombre("Una nueva empresa");
+		assertEquals(empresa.getNombre(),"Una nueva empresa");
+		assertEquals(empresa.getCuentas().size(),1);
+	}
+	
+	//@Test
+	public void sacamosLaCuentaHackeadaDeLaPrimerEmpresaYSeLaDamosAlaSegunda() {
+		Empresa uno = this.buscarEmpresaId(1L);
+		Empresa dos = this.buscarPorNombre("Una nueva empresa");
+		
+		//uno.getCuentas().forEach(x -> System.out.println(x.getNombre()));
+		
+		Cuenta unaCuentaHackeada = uno.getCuentas().stream().filter(x -> x.getNombre().equals("Hackeada")).findFirst().orElse(null);
+		assertEquals(unaCuentaHackeada.getNombre(), "Hackeada");
+		
+		Boolean a = uno.getCuentas().removeIf(x -> x.getNombre().equals("Hackeada"));
+		
+		assertTrue(a);
+		dos.addCuenta(unaCuentaHackeada);
+		unaCuentaHackeada.setEmpresa(dos);
+		
+		manager.getTransaction().begin();
+		manager.persist(uno);
+		manager.persist(dos);
+		manager.getTransaction().commit();
+	}
+	
+	//@Test
+	public void laEmpresaDosTieneDosCuentas() {
+		Empresa empresa = this.buscarPorNombre("Una nueva empresa");
+		assertEquals(empresa.getCuentas().size(),2);
+		
+	}
 	
 
 }
