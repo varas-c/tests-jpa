@@ -162,8 +162,17 @@ public class TestPersistencia {
 	public void laEmpresaDosTieneDosCuentas() {
 		Empresa empresa = this.buscarPorNombre("Una nueva empresa");
 		assertEquals(empresa.getCuentas().size(),2);
-		
 	}
+	
+	//@Test
+	public void borrarEmpresaDos() {
+		Empresa empresa = this.buscarPorNombre("Una nueva empresa");
+		
+		manager.getTransaction().begin();
+		manager.remove(empresa);
+		manager.getTransaction().commit();
+	}
+	
 	
 
 }
