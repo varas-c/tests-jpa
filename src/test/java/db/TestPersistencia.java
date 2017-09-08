@@ -11,8 +11,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import jacklow.model.Condicion;
 import jacklow.model.Cuenta;
 import jacklow.model.Empresa;
+import jacklow.model.Indicador;
 import jacklow.model.JPAUtility;
 
 public class TestPersistencia {
@@ -170,6 +172,41 @@ public class TestPersistencia {
 		
 		manager.getTransaction().begin();
 		manager.remove(empresa);
+		manager.getTransaction().commit();
+	}
+	
+	//@Test
+	public void guardoUnIndicador() {
+		Indicador indicador = new Indicador();
+		
+		manager.getTransaction().begin();
+		manager.persist(indicador);
+		manager.getTransaction().commit();
+		
+	}
+	
+	//@Test
+	public void guardarCondicionConIndicadorYaCreado() {
+		Object id = 1L;
+		Indicador indicador = manager.find(Indicador.class, id);
+		
+		assertNotNull(indicador);
+		
+		Condicion c1 = new Condicion(indicador);
+		Condicion c2 = new Condicion(indicador);
+		
+		manager.getTransaction().begin();
+		manager.persist(c1);
+		manager.persist(c2);
+		manager.getTransaction().commit();
+	}
+	
+	@Test
+	public void borrarCondicion() {
+		Condicion condicion = manager.find(Condicion.class, 1L);
+		
+		manager.getTransaction().begin();
+		manager.remove(condicion);
 		manager.getTransaction().commit();
 	}
 	
