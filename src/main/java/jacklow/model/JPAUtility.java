@@ -8,7 +8,7 @@ public class JPAUtility {
 
 	private static final EntityManagerFactory empFactory;
 		static {
-			empFactory = Persistence.createEntityManagerFactory("testing");
+			empFactory = Persistence.createEntityManagerFactory("herencia");
 		}
 	
 	public static EntityManager getEntityManager(){

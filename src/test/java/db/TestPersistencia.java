@@ -16,6 +16,8 @@ import jacklow.model.Cuenta;
 import jacklow.model.Empresa;
 import jacklow.model.Indicador;
 import jacklow.model.JPAUtility;
+import jacklow.model.NoTaxativa;
+import jacklow.model.Taxativa;
 
 public class TestPersistencia {
 	EntityManager manager = JPAUtility.getEntityManager();
@@ -186,6 +188,7 @@ public class TestPersistencia {
 	}
 	
 	//@Test
+	/*
 	public void guardarCondicionConIndicadorYaCreado() {
 		Object id = 1L;
 		Indicador indicador = manager.find(Indicador.class, id);
@@ -209,6 +212,30 @@ public class TestPersistencia {
 		manager.remove(condicion);
 		manager.getTransaction().commit();
 	}
+	*/
+	
+	//@Test
+	public void creoUnaTaxativa(){
+		Indicador ind = manager.find(Indicador.class, 1L);
+		assertNotNull(ind);
+		Taxativa tax = new Taxativa();
+		tax.setIndicador(ind);
+		manager.getTransaction().begin();
+		manager.persist(tax);
+		manager.getTransaction().commit();
+	}
+	
+	@Test
+	public void creoUnaNoTaxativa(){
+		Indicador ind = manager.find(Indicador.class, 1L);
+		assertNotNull(ind);
+		NoTaxativa tax = new NoTaxativa();
+		tax.setIndicador(ind);
+		manager.getTransaction().begin();
+		manager.persist(tax);
+		manager.getTransaction().commit();
+	}
+	
 	
 	
 

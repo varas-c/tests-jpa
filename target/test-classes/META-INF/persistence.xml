@@ -7,20 +7,22 @@
   
   <!-- TESTING !!!!!!!!!  -->
   
-    <persistence-unit name="testing" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="herencia" transaction-type="RESOURCE_LOCAL">
     	<provider>org.hibernate.ejb.HibernatePersistence</provider>
     	
     	 <class>jacklow.model.Empresa </class>
     	 <class>jacklow.model.Cuenta </class>
     	 <class>jacklow.model.Indicador </class>
     	 <class>jacklow.model.Condicion </class>
+    	 <class>jacklow.model.Taxativa </class>
+    	 <class>jacklow.model.NoTaxativa </class>
     	 
         <properties> 
 	    <property name="hibernate.archive.autodetection" value="class"/>        
         
          
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" /> 
-            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/testing" /> 
+            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/herencia" /> 
             <property name="hibernate.connection.username" value="root" /> 
             <property name="hibernate.connection.password" value="toor" /> 
 
